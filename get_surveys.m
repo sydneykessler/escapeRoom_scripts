@@ -69,10 +69,10 @@ fprintf('-------------Exported surveys-------------\n')
     % survey 1: 2691
     % survey 2: 5428
     % survey 3: 8501
-% events = EEG.event;
-% events = {events.type};
-% for i=1:num_surveys
-%     isSurvey = cellfun(@(x)isequal(x,survey_contents_arr{i}), events);
-%     [idx] = find(isSurvey);
-%     fprintf('%d\n', idx)
-% end
+events = EEG.event;
+events = {events.type};
+for i=1:num_surveys
+    isSurvey = cellfun(@(x)isequal(x,survey_contents_arr{i}), events);
+    [idx] = find(isSurvey);
+    fprintf('%d\n', idx)
+end
