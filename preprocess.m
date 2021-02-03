@@ -74,6 +74,7 @@ fprintf('-------------Removed bad channels-------------\n')
 
 %% rereference with average
 EEG = pop_reref(EEG, []); %empty brackets mean reref by average
+    % 
 bsl_EEG = pop_reref(bsl_EEG, []);
 
 %% get survey data and replace survey marker names
@@ -82,7 +83,7 @@ EEG = get_surveys(EEG, subNum, roomNum, main_path);
 %% save
 outfile = [main_file_name '_reref.set'];
 EEG = pop_saveset(EEG, outfile, main_path); 
-bsl_outfile = [main_file_name '_basleine_reref.set'];
+bsl_outfile = [main_file_name '_baseline_reref.set'];
 bsl_EEG = pop_saveset(bsl_EEG, bsl_outfile, bsl_path); 
 
 fprintf('-------------Saved-------------\n')
@@ -113,9 +114,13 @@ end
 bsl_EEG = pop_select(bsl_EEG,'nochannel', bad_channels_ASR);
 
 % Run ASR separately and assign clean section for calculating threshold by clean_asr
-EEG = clean_asr(EEG_rmbadCh, 5, [], [], [], bsl_EEG);
+EEG_interp = clean_asr(EEG_rmbadCh, 5, [], [], [], bsl_EEG);
 %   = clean_asr(Signal,StandardDevCutoff,WindowLength,BlockSize,MaxDimensions,ReferenceMaxBadChannels,RefTolerances,ReferenceWindowLength,UseGPU,UseRiemannian,MaxMem)
-    
+
+% ASR, but just rejecting messy windows
+EEG = clean_rawdata(EEG_interp, -1, -1 , -1, -1, -1, 0.2);
+% EEG, 5, [0.25 0.75], 0.7, 4, 20, 0.2
+
 %% save
 outfile = [main_file_name '_asr.set'];
 EEG = pop_saveset(EEG, outfile, main_path); 
