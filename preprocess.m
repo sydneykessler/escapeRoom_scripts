@@ -23,7 +23,7 @@
 
 %  if you have any questions, ask Sydney (sekessle at ucsd dot edu)
 
-%%
+%% if eeglab is not already running, uncomment this
 % clear all
 % eeglab
 
@@ -31,11 +31,11 @@
 % subject
 subNum = '02';
 % which room
-roomNum = '2';
+roomNum = '1';
 % base path
 mainpathbase = '/data/projects/ying/VR/escapeRoom/';  % <-- change accordingly
 % is there a baseline file? If no, change to 0
-isBaseline = 1;
+isBaseline = 0;
 
 %% import, merge, and clean 
 % declare paths
@@ -84,7 +84,7 @@ outfile = [main_file_name '_full.set'];
 EEG = pop_saveset(EEG, outfile, main_path); 
 
 % same as above, but for baseline
-if isBasline
+if isBaseline
     bsl_EEG.chanlocs = readlocs('Smarting24.ced'); 
     [bsl_EEG, ~, ~] = pop_eegfiltnew(bsl_EEG, 'locutoff',1, 'hicutoff', 55);
     bsl_outfile = [main_file_name '_baseline_full.set'];
@@ -141,15 +141,12 @@ if ~isBaseline
     
     % if channels removed, create file w/indices of channels removed by ASR
     try
-        [bad_channels_ASR] = find(EEG_rmbadCh.etc.clean_channel_mask==0);
+        [bad_channels_ASR] = find(EEG.etc.clean_channel_mask==0);
         badchansfile = ['badchans_' subNum '_' roomNum '.mat'];
         save(badchansfile, 'bad_channels_ASR'); 
     catch
         fprinf('No channels were removed\n');
     end
-
-    % remove chans from bsl
-    bsl_EEG = pop_select(bsl_EEG,'nochannel', bad_channels_ASR);
 
 % if there's a baseline, use that as references for ASR
 else
@@ -248,54 +245,6 @@ EEG.badcomps = [1 6 8 16 18 19];
 %% save
 outfile = [main_file_name '_ICA.set'];
 EEG = pop_saveset(EEG, outfile, main_path);  
-
-%% separate by survey
-
-% get indices of surveys
-events = EEG.event;
-events = {events.type};
-isSurvey = cellfun(@(x)isequal(x,'survey'), events);
-[survey_idx] = find(isSurvey);
-
-surveys = load(['sub' subNum '_room' roomNum '_surveys.mat']);
-    
-for i=1:size(surveys,1)  % number of surveys
-    % get latency of beginning section
-    if i==1
-       beginning = 1;
-    else
-       beginning = ending; 
-    end
-    % get latency of end of section and convert to seconds
-    if i<size(surveys,1)
-        ending = (cell2mat({EEG.event(survey_idx(i)).latency})-1)/EEG.srate;
-    else
-    % last element
-        ending = EEG.times(end)/1000;  % /1000 since EEG.times is in miliseconds
-    end
-    
-    % select only that section
-    new_EEG =  pop_select(EEG, 'time', [beginning ending]);
-    
-    % remove badcomps
-    new_EEG = pop_subcomp(new_EEG, new_EEG.badcomps, 0, 0);
-
-    % run asr/clean artifacts 
-    clean_EEG = clean_artifacts(new_EEG);
-    vis_artifacts(clean_EEG, new_EEG);  % can turn this line off if you don't want to plot
-    
-    % save/export
-    outfile =  strcat('sub', subNum,'_room',roomNum,'_survey',num2str(i),'.set');
-    outpath = strcat(main_path, '/segmentedBySurvey');
-    pop_saveset(new_EEG, outfile, outpath);
-end
-
-%%
-
-
-
-
-
 
 
 
