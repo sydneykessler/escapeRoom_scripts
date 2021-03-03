@@ -29,13 +29,13 @@
 
 %% define parameters
 % subject
-subNum = '02';
+subNum = '03';
 % which room
-roomNum = '1';
+roomNum = '2';
 % base path
 mainpathbase = '/data/projects/ying/VR/escapeRoom/';  % <-- change accordingly
 % is there a baseline file? If no, change to 0
-isBaseline = 0;
+isBaseline = 1;
 
 %% import, merge, and clean 
 % declare paths
@@ -239,8 +239,8 @@ EEG = pop_saveset(EEG, outfile, main_path);
 % 4) once you've decided which are bad, fill out variables below
 
 % declare good and bad ICAs --> FILL THIS IN
-EEG.goodcomps = [2 3 4 5 7 9 10 11 12 13 14 15 17];
-EEG.badcomps = [1 6 8 16 18 19];
+EEG.goodcomps = [1 2 3 7 9 10 11 12 16 17 18];
+EEG.badcomps = [4 5 6 8 13 14 15 ];
 
 %% save
 outfile = [main_file_name '_ICA.set'];
