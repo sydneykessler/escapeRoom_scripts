@@ -1,4 +1,5 @@
-Contains functions used by preprocess.m
+Contains functions used by preprocess.m:
 
 - import_xdf.m
 - get_surveys.m
+- Smarting24.ced
