@@ -19,7 +19,7 @@ isSurvey = cellfun(@(x)isequal(x,'survey'), events);
 [survey_idx] = find(isSurvey);
 
 surveys = load(['sub' subNum '_room' roomNum '_surveys.mat']);
-surveys =  surveys.survey.T;
+surveys =  surveys.T;
     
 for i=1:size(surveys,1)  % number of surveys
     % get latency of beginning section

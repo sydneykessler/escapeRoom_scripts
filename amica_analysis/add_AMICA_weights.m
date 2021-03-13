@@ -21,7 +21,7 @@ fprintf('-------------Set Parameters-------------\n')
 
 %%  load reref file (pre-ASR)
 
-for i=1:3
+for i=3
     roomNum  =  num2str(i);
     
     %% load clean data
@@ -48,7 +48,7 @@ for i=1:3
         outdatapath = [outpath '/room' roomNum];
         EEG = pop_saveset(EEG, outfile, outdatapath); 
         
-        fprintf(['----Saved Room %d Model %d----\n',i,j])
+        fprintf('----Saved Room %d Model %d----\n',i,j)
     end
 
 end
