@@ -33,7 +33,6 @@ EEG = pop_loadset(filename);
 fprintf('-------------Loaded file-------------\n')
 
 outdir = [outpath '/amicaout_room' roomNum '/'];
-
 %% run
 fprintf('-------------Starting AMICA-------------\n')
 
