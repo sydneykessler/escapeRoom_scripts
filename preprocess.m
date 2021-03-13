@@ -31,7 +31,7 @@
 % subject
 subNum = '03';
 % which room
-roomNum = '2';
+roomNum = '3';
 % base path
 mainpathbase = '/data/projects/ying/VR/escapeRoom/';  % <-- change accordingly
 % is there a baseline file? If no, change to 0
@@ -47,7 +47,7 @@ chdir(main_path)
 
 main_file_name = ['room' roomNum '_sub' subNum];
 
-addpath(scripts_path)
+addpath(genpath(scripts_path))
 addpath(raw_path)
 
 if isBaseline
@@ -238,9 +238,14 @@ EEG = pop_saveset(EEG, outfile, main_path);
 %    pop_prop(EEG, 0, comp, NaN, {'freqrange',[2 50]});
 % 4) once you've decided which are bad, fill out variables below
 
-% declare good and bad ICAs --> FILL THIS IN
-EEG.goodcomps = [1 2 3 7 9 10 11 12 16 17 18];
-EEG.badcomps = [4 5 6 8 13 14 15 ];
+% plot all at once:
+% for i=1:EEG.nbchan
+%     pop_prop(EEG, 0, i, NaN, {'freqrange',[2 50]});
+% end
+
+%% declare good and bad ICAs --> FILL THIS IN
+EEG.goodcomps = [1 2 3 5 8 9 10 11 12 15 16 17 18 21 22];
+EEG.badcomps = [4 6 7 13 14 19 20];
 
 %% save
 outfile = [main_file_name '_ICA.set'];

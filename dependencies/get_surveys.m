@@ -63,16 +63,15 @@ end
 
 fprintf('-------------Exported surveys-------------\n')
 
-%%
-% testing to see if names actually got changed
+%% testing to see if names actually got changed
 % indices for sub01 room 1 surveys:
     % survey 1: 2691
     % survey 2: 5428
     % survey 3: 8501
-events = EEG.event;
-events = {events.type};
-for i=1:num_surveys
-    isSurvey = cellfun(@(x)isequal(x,survey_contents_arr{i}), events);
-    [idx] = find(isSurvey);
-    fprintf('%d\n', idx)
+% events = EEG.event;
+% events = {events.type};
+% for i=1:num_surveys
+%     isSurvey = cellfun(@(x)isequal(x,survey_contents_arr{i}), events);
+%     [idx] = find(isSurvey);
+    % fprintf('%d\n', idx)
 end

@@ -1,9 +1,9 @@
 %% separate by survey
 % generates separate files for each survey segment
 
-%% define parameters
-subNum = '02';
-roomNum = '1';
+%% define parameters    EEG = pop_mergeset(EEG,EEG_2, 0);
+subNum = '03';
+roomNum = '3';
 % base path
 mainpathbase = '/data/projects/ying/VR/escapeRoom/'; 
 
@@ -19,6 +19,7 @@ isSurvey = cellfun(@(x)isequal(x,'survey'), events);
 [survey_idx] = find(isSurvey);
 
 surveys = load(['sub' subNum '_room' roomNum '_surveys.mat']);
+surveys =  surveys.survey.T;
     
 for i=1:size(surveys,1)  % number of surveys
     % get latency of beginning section
@@ -46,7 +47,7 @@ for i=1:size(surveys,1)  % number of surveys
     vis_artifacts(clean_EEG, new_EEG);  % can turn this line off if you don't want to plot
     
     % save/export
-    outfile =  strcat('sub', subNum,'_room',roomNum,'_survey',num2str(i),'.set');
+    outfile =  strcat('survey_',num2str(i),'.set');
     outpath = strcat(main_path, '/segmentedBySurvey');
     pop_saveset(new_EEG, outfile, outpath);
 end
