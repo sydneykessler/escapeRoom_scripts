@@ -1,0 +1,45 @@
+%% AMICA multiple-model analysis
+% this script generates AMICA weights
+
+eeglab 
+
+%% define parameters
+subNum = '03';
+
+% add paths
+datapath = [pwd '/input_data'];
+outpath = [pwd '/output'];
+
+addpath(genpath(datapath))
+addpath(outpath)
+
+numprocs = 1;       % # of nodes (1-4: default 1)
+num_models = 8;     % # of models of mixture ICA
+max_threads = 24;   % # of threads (1-24: default = 24)
+
+fprintf('-------------Set Parameters-------------\n')
+
+%% load dataset
+%for i=1:3
+
+i=3;
+
+roomNum = num2str(i);
+fprintf('-------------ROOM %d-------------\n', i)
+filename = ['room' roomNum '_sub' subNum '_asr.set'];
+
+EEG = pop_loadset(filename);
+fprintf('-------------Loaded file-------------\n')
+
+outdir = [outpath '/amicaout_room' roomNum '/'];
+
+%% run
+fprintf('-------------Starting AMICA-------------\n')
+
+% run amica
+[weights,sphere,mods] = runamica15(EEG.data,'num_models',num_models, 'outdir',outdir, ...
+    'numprocs', numprocs, 'max_threads', max_threads);
+
+fprintf('-------------Finished AMICA-------------\n')
+% end
+
