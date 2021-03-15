@@ -42,7 +42,9 @@ for i=3
         EEG.icaweights= modout.W(:,:,model_index);
         EEG.icasphere= modout.S;
         EEG = eeg_checkset(EEG);
-
+        
+        EEG.model_prob= 10.^modout.v;
+        
         %% save
         outfile = ['room' roomNum  '_mod' num2str(j) '.set'];
         outdatapath = [outpath '/room' roomNum];
