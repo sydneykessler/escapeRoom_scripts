@@ -91,8 +91,8 @@ end
 %       normalize y axis
 
 % load room
-% room = load('sub03_powerSpectra.mat');
-% room = room.room;
+room = load('sub03_powerSpectra.mat');
+room = room.room;
 
 % load colors (in scripts>dependencies
 color_ref = load('color_reference.mat');
