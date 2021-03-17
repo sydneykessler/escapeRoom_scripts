@@ -24,6 +24,7 @@ fprintf('-------------Set Parameters-------------\n')
 
 i=3;
 
+chdir(datapath)
 roomNum = num2str(i);
 fprintf('-------------ROOM %d-------------\n', i)
 filename = ['room' roomNum '_sub' subNum '_asr.set'];
@@ -32,7 +33,6 @@ EEG = pop_loadset(filename);
 fprintf('-------------Loaded file-------------\n')
 
 outdir = [outpath '/amicaout_room' roomNum '/'];
-
 %% run
 fprintf('-------------Starting AMICA-------------\n')
 

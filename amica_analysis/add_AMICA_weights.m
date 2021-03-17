@@ -21,7 +21,7 @@ fprintf('-------------Set Parameters-------------\n')
 
 %%  load reref file (pre-ASR)
 
-for i=3
+for i=1:3
     roomNum  =  num2str(i);
     
     %% load clean data
