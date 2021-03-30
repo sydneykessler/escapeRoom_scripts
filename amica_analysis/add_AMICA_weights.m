@@ -5,11 +5,13 @@
 
 %% define parameters
 subNum = '03';
+num_models = 5;
+mod_path = 'five_mods';
 
 % add paths
 mainpath = '/data/projects/ying/VR/escapeRoom/multi_model_AMICA';
 datapath = [mainpath '/input_data'];
-modelspath = [mainpath '/output'];
+modelspath = [mainpath '/amica_output/' mod_path '/sub' subNum];
 scriptspath = [mainpath '/scripts'];
 outpath = [mainpath '/data_w_models'];
 
@@ -30,12 +32,12 @@ for i=3
 
     %% load in weights
 
-    outdir = [modelspath filesep 'amicaout_room' roomNum];
+    outdir = [modelspath filesep 'amicaout_room' roomNum '_' num2str(num_models) 'mods'];
 
     % load weights
     modout = loadmodout15(outdir);
 
-    for j=1:8
+    for j=1:num_models
         % load individual ICA model into EEG struct
         model_index= j;
         EEG.icawinv= modout.A(:,:,model_index);
@@ -46,7 +48,7 @@ for i=3
         EEG.model_prob= 10.^modout.v;
         
         %% save
-        outfile = ['room' roomNum  '_mod' num2str(j) '.set'];
+        outfile = ['sub' subNum '_room' roomNum  '_mod' num2str(j) '.set'];
         outdatapath = [outpath '/room' roomNum];
         EEG = pop_saveset(EEG, outfile, outdatapath); 
         

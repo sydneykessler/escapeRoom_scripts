@@ -2,9 +2,9 @@
 % period of experiment, no windows removed)
 
 % set parameters
-subNum = '03';
+subNum = '05';
 
-for i=1:3
+for i=1
     roomNum = num2str(i);
     
     chdir(['/data/projects/ying/VR/escapeRoom/sub' subNum '/room' roomNum])

@@ -13,7 +13,7 @@ output_path = [mainpathbase 'power_spectra']; % where saved files will go
 
 chdir(output_path)
 
-addpath(scripts_path)
+addpath(genpath(scripts_path), genpath(output_path))
 
 room = {};
 all_chans = {'Fp1', 'Fp2', 'F3', 'F4', 'C3', 'C4', 'P3', 'P4', 'O1', ...
@@ -91,8 +91,8 @@ end
 %       normalize y axis
 
 % load room
-% room = load('sub03_powerSpectra.mat');
-% room = room.room;
+room = load('sub03_powerSpectra.mat');
+room = room.room;
 
 % load colors (in scripts>dependencies
 color_ref = load('color_reference.mat');
@@ -150,14 +150,18 @@ for k=1:3
 
                 % plot freq x spectra, color
                 plot(these_freqs, these_spectra, 'color', this_color, ...
-                    'LineStyle',this_linestyle)
+                    'LineStyle',this_linestyle, 'LineWidth',1.5)
                 hold on
 
             end
 
             % only show applicable emotions in legend
-            legend_emotions_idx = ismember(emotion_colors, these_emotions);
-            legend_colors = legend_labels(legend_emotions_idx);
+            legend_colors = cell(1,num_surveys);
+            for p=1:num_surveys
+                legend_emotions_idx = ismember(emotion_colors, these_emotions{p});
+                legend_colors{p} = legend_labels{legend_emotions_idx};
+            end
+            
             legend(legend_colors)
 
             % add labels

@@ -5,14 +5,21 @@ clearvars; close all;
 eeglab
 
 %% add paths
+<<<<<<< Updated upstream
 mainpath = 'C:\Users\lelange\Documents\Leon\Forschung\SCCN\Escape_Room_AMICA_Analysis\amica_models_data'; 
 %mainpath = '/data/projects/ying/VR/escapeRoom/multi_model_AMICA'; 
+=======
+
+%  parent path where all other data is
+mainpath = '/data/projects/ying/VR/escapeRoom/multi_model_AMICA'; 
+>>>>>>> Stashed changes
     %^^^ replace with your own and comment this out
 scriptspath = [mainpath '/scripts'];  % this is the main folder of the repo; change name accordingly
 datapath = [mainpath '/data_w_models']; % path to data (includes subfolders)
 
 addpath(genpath(scriptspath), genpath(datapath))
 
+<<<<<<< Updated upstream
 
 
 %% plot model probability while loading in EEG sets
@@ -64,4 +71,32 @@ for actual_room = 1:3
     end
 
 end
+=======
+%% load in EEG sets
+%  this is just loading in one set as a sample to get you started - change
+%  it however you see fit!
+
+% declare which room and model you want
+roomNum  = '1';
+modelNum = '1';
+
+% generate path where that file will be
+roompath = [datapath  '/room' roomNum];
+
+% load in file as EEGLAB variable
+infile = ['room'  roomNum '_mod' modelNum '.set'];
+EEG = pop_loadset(infile, roompath); 
+
+%% get EEG.event indices for surveys 
+%  (referenced from separate_by_survey.m)
+
+% get all events & associated vars
+events = EEG.event; 
+% get cell array of just event names
+events = {events.type};
+% generate bool of where the survey events are
+isSurvey = cellfun(@(x)isequal(x,'survey'), events);
+% get indices of where the bool is true 
+[survey_idx] = find(isSurvey);
+>>>>>>> Stashed changes
 
