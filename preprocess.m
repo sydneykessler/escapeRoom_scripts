@@ -29,9 +29,9 @@
 
 %% define parameters
 % subject
-subNum = '03';
+subNum = '05';
 % which room
-roomNum = '3';
+roomNum = '1';
 % base path
 mainpathbase = '/data/projects/ying/VR/escapeRoom/';  % <-- change accordingly
 % is there a baseline file? If no, change to 0
@@ -96,6 +96,7 @@ fprintf('-------------Imported xdf-------------\n')
     % sub01_room1: removed F4
     % sub01_room2: none
     % sub03_room1: removed AFz
+    % sub05_room1: none
 % plot scroll data to figure out which chans are weird, then you can remove
 eegplot(EEG.data)
 %%
@@ -177,7 +178,7 @@ else
     % Run ASR separately and assign clean section for calculating threshold by clean_asr
     EEG_interp = clean_asr(EEG_rmbadCh, 5, [], [], [], bsl_EEG);
     %   = clean_asr(Signal,StandardDevCutoff,WindowLength,BlockSize,MaxDimensions,ReferenceMaxBadChannels,RefTolerances,ReferenceWindowLength,UseGPU,UseRiemannian,MaxMem)
-
+    
     % ASR, but just rejecting messy windows
     EEG = clean_rawdata(EEG_interp, -1, -1 , -1, -1, -1, 0.2);
 
