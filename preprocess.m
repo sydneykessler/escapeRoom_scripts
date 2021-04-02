@@ -29,7 +29,7 @@
 
 %% define parameters
 % subject
-subNum = '05';
+subNum = '11';
 % which room
 roomNum = '1';
 % base path
@@ -97,7 +97,8 @@ fprintf('-------------Imported xdf-------------\n')
     % sub01_room2: none
     % sub03_room1: removed AFz
     % sub05_room1: none
-% plot scroll data to figure out which chans are weird, then you can remove
+% Mostly going to use this in reference to the runsheet in the future; ie, 
+% if a channel was malfunctioning during data collection
 eegplot(EEG.data)
 %%
 % declare bad chans
@@ -110,6 +111,10 @@ EEG = pop_select(EEG,'nochannel',badchans);
 if isBaseline
     bsl_EEG = pop_select(bsl_EEG,'nochannel',badchans);
 end
+
+% save record of badchans
+badchansbyhand = ['badchans_byhand_' subNum '_' roomNum '.mat'];
+save(badchansbyhand, 'badchans'); 
 
 fprintf('-------------Removed bad channels-------------\n')
 
@@ -199,13 +204,15 @@ fprintf('-------------Saved-------------\n')
 infile = [main_file_name '_reref.set'];
 EEG = pop_loadset(infile, main_path); 
 
-%% remove channels that ASR removed 
+%% remove channels 
+
 try
+    % from ASR --> bad chans by hand should already be removed in reref
     badchansfile = ['badchans_' subNum '_' roomNum '.mat'];
     badchans_asr = load(badchansfile);  
     EEG = pop_select(EEG,'nochannel',badchans_asr.bad_channels_ASR);
 catch
-    fprintf('No channels to remove\n');
+    fprintf('No channels to remove from ASR\n');
 end
 
 %% apply AMICA weights
@@ -233,24 +240,37 @@ EEG = pop_saveset(EEG, outfile, main_path);
 
 %% look at ICLabels --> BY HAND
 % 1) in GUI, File>Load existing datset --> room#_sub#_ICA.set
-% 2) Tools<ICLabel
-% 3) To see each component individually:
+% 2) Tools<ICLabel (must have plugin downloaded)
+% 3) Plot<Component activations (scroll)
+% 4) To see each component individually:
 %    comp = 1  % which component num to plot
 %    pop_prop(EEG, 0, comp, NaN, {'freqrange',[2 50]});
-% 4) once you've decided which are bad, fill out variables below
+% 5) once you've decided which are bad, fill out variables below
 
 % plot all at once:
-% for i=1:EEG.nbchan
-%     pop_prop(EEG, 0, i, NaN, {'freqrange',[2 50]});
-% end
+for i=1:EEG.nbchan
+    pop_prop(EEG, 0, i, NaN, {'freqrange',[2 50]});
+end
 
 %% declare good and bad ICAs --> FILL THIS IN
-EEG.goodcomps = [1 2 3 5 8 9 10 11 12 15 16 17 18 21 22];
-EEG.badcomps = [4 6 7 13 14 19 20];
+EEG.goodcomps = [1 2 4 6 7 8 9 11 12 13 14 15 17 20];
+EEG.badcomps = [3 5 10 16 18 19];
 
 %% save
 outfile = [main_file_name '_ICA.set'];
-EEG = pop_saveset(EEG, outfile, main_path);  
+EEG = pop_saveset(EEG, outfile, main_path);    %TODO: try 'resave' for 
+                        % 'savemode' field to save over current dataset
+
+%% OPTIONAL:
+
+% remove appended baseline
+EEG = remove_baseline(EEG);
+
+% remove bad comps
+EEG = pop_subcomp(EEG, EEG.badcomps, 0, 0);
+
+% run asr (no window removal aka just burst correction)
+EEG = clean_asr(EEG, 10, [], [], [], bsl_EEG);
 
 
 

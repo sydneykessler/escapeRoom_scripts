@@ -2,8 +2,8 @@
 % generates separate files for each survey segment
 
 %% define parameters    EEG = pop_mergeset(EEG,EEG_2, 0);
-subNum = '03';
-roomNum = '3';
+subNum = '05';
+roomNum = '1';
 % base path
 mainpathbase = '/data/projects/ying/VR/escapeRoom/'; 
 
@@ -13,10 +13,12 @@ chdir([mainpathbase '/sub' subNum '/room' roomNum])
 EEG = pop_loadset(['room' roomNum '_sub' subNum '_ICA.set']);
 
 %% get indices of surveys
-events = EEG.event;
-events = {events.type};
-isSurvey = cellfun(@(x)isequal(x,'survey'), events);
-[survey_idx] = find(isSurvey);
+survey_idx = get_marker_idx(EEG, 'survey');
+
+% events = EEG.event;
+% events = {events.type};
+% isSurvey = cellfun(@(x)isequal(x,'survey'), events);
+% [survey_idx] = find(isSurvey);
 
 surveys = load(['sub' subNum '_room' roomNum '_surveys.mat']);
 surveys =  surveys.T;
@@ -44,6 +46,7 @@ for i=1:size(surveys,1)  % number of surveys
 
     % run asr/clean artifacts 
     clean_EEG = clean_artifacts(new_EEG);
+        % Note: in clean_artifacts in EEGLAB v2021.0, ASR is NOT variable
     vis_artifacts(clean_EEG, new_EEG);  % can turn this line off if you don't want to plot
     
     % save/export
