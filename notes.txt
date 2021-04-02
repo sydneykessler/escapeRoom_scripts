@@ -1,0 +1,40 @@
+ANALYSES NOTES:
+
+-----Preprocessing-----
+Data is preprocessed by the preprocess.m script in the /scripts subfolder. 
+Loosely follows Makoto's preprocessing pipeline
+The end result is data that:
+	- has been hipassed
+	- has 1 set of ICA weights
+	- has fields indicating quality of components (EEG.goodComps, EEG.badComps)
+	- has NOT gone through ASR
+	- has baseline data concatenated to the front
+	- is called room[#]_sub[#]_ICA.set
+
+
+-----Multi-modal AMICA-----
+An exploration to see if different AMICA models will better fit certain states/phases of the experiment such as
+- Emotions (split by survey)
+- Puzzle completion (split by gaze points) [HAVE NOT STARTED THIS YET]
+Visualizations of best-model-fit are generated with amica_model_analysis.m in /scripts/amica_analysis. Pipeline for data that is input into this script is:
+	- data that has been through first half of preprocess.m 
+	- room[#]_sub[#]_asr.set is run though generate_AMICA_models.m, which outputs a folder of weights for each model (5 or 8)
+	- weights from all models applied with add_AMICA_weights.m to a DIFFERENT dataset that was input into generate_AMICA_models.m. This dataset was made with get_full_data_asr.m, and involves all the same steps as the preprocess pipeline EXCEPT for removing messy windows with ASR. This is so there there is no timeline loss
+	- this generates as many datasets as there are models x rooms
+	
+
+-----Power Spectra-----
+An exploration into the variationg of power spectra in different phases/states of the experiment
+So far, this has been by Emotions/Surveys. The pipeline for this is:
+	- the room[#]_sub[#]_ICA.set is split into 2-4 datasets by survey time with separate_by_survey.m and bad components are removed, and ASR is run
+	- for each of these datasets, a power spectra is generated and put into a struct and power spectra plots are generated with get_power_spectra.m
+
+
+-----Heatmap-----
+For room 1, subjects have the option to turn on a heatmap. Does this make any differents in their behavior/biometrics?
+
+	
+
+
+
+
