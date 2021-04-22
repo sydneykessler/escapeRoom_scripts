@@ -3,57 +3,62 @@
 %%
 %eeglab
 
-%% define parameters
-subNum = '03';
-num_models = 5;
-mod_path = 'five_mods';
+subs2use = {'06','08','09','10','11'};
 
-% add paths
-mainpath = '/data/projects/ying/VR/escapeRoom/multi_model_AMICA';
-datapath = [mainpath '/input_data'];
-modelspath = [mainpath '/amica_output/' mod_path '/sub' subNum];
-scriptspath = [mainpath '/scripts'];
-outpath = [mainpath '/data_w_models'];
+for p=1:length(subs2use)
 
-%%
-chdir(mainpath)
-addpath(datapath, modelspath,  genpath(scriptspath), genpath(outpath))
+    %% define parameters
+    subNum = subs2use{p}; %'03';
+    num_models = 5;
+    mod_path = 'five_mods';
 
-fprintf('-------------Set Parameters-------------\n')
+    % add paths
+    mainpath = '/data/projects/ying/VR/escapeRoom/multi_model_AMICA';
+    datapath = [mainpath '/input_data'];
+    modelspath = [mainpath '/amica_output'];
+    scriptspath = [mainpath '/scripts'];
+    outpath = [mainpath '/data_w_models'];
 
-%%  load reref file (pre-ASR)
+    %%
+    chdir(mainpath)
+    addpath(datapath, genpath(modelspath),  genpath(scriptspath), genpath(outpath))
 
-for i=3
-    roomNum  =  num2str(i);
-    
-    %% load clean data
-    infile = ['room'  roomNum '_sub' subNum '_asr_full.set'];
-    EEG = pop_loadset(infile, datapath); 
+    fprintf('-------------Set Parameters-------------\n')
 
-    %% load in weights
+    %%  load reref file (pre-ASR)
 
-    outdir = [modelspath filesep 'amicaout_room' roomNum '_' num2str(num_models) 'mods'];
+    for i=1
+        roomNum  =  num2str(i);
 
-    % load weights
-    modout = loadmodout15(outdir);
+        %% load clean data
+        infile = ['room'  roomNum '_sub' subNum '_asr_full.set'];
+        inputpath = ['/data/projects/ying/VR/escapeRoom/sub' subNum '/room' roomNum];
+        EEG = pop_loadset(infile, inputpath); 
 
-    for j=1:num_models
-        % load individual ICA model into EEG struct
-        model_index= j;
-        EEG.icawinv= modout.A(:,:,model_index);
-        EEG.icaweights= modout.W(:,:,model_index);
-        EEG.icasphere= modout.S;
-        EEG = eeg_checkset(EEG);
-        
-        EEG.model_prob= 10.^modout.v;
-        
-        %% save
-        outfile = ['sub' subNum '_room' roomNum  '_mod' num2str(j) '.set'];
-        outdatapath = [outpath '/room' roomNum];
-        EEG = pop_saveset(EEG, outfile, outdatapath); 
-        
-        fprintf('----Saved Room %d Model %d----\n',i,j)
+        %% load in weights
+
+        outdir = [modelspath filesep mod_path '/sub' subNum '/amicaout_room' roomNum '_5mods'];
+
+        % load weights
+        modout = loadmodout15(outdir);
+
+        for j=1:num_models
+            % load individual ICA model into EEG struct
+            model_index= j;
+            EEG.icawinv= modout.A(:,:,model_index);
+            EEG.icaweights= modout.W(:,:,model_index);
+            EEG.icasphere= modout.S;
+            EEG = eeg_checkset(EEG);
+
+            EEG.model_prob= 10.^modout.v;
+
+            %% save
+            outfile = ['sub' subNum '_room' roomNum  '_mod' num2str(j) '.set'];
+            outdatapath = [outpath '/room' roomNum];
+            EEG = pop_saveset(EEG, outfile, outdatapath); 
+
+            fprintf('----Saved Room %d Model %d----\n',i,j)
+        end
+
     end
-
 end
-
