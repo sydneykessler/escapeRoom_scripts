@@ -5,7 +5,7 @@
 subNum = '03';
 addpath(genpath('/data/projects/ying/VR/escapeRoom/scripts'))
 
-for i=1:3
+for i=1:2
     roomNum = num2str(i);
     
     chdir(['/data/projects/ying/VR/escapeRoom/sub' subNum '/room' roomNum])
