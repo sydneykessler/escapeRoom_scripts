@@ -29,7 +29,7 @@
 
 %% define parameters
 % subject
-subNum = '11';
+subNum = '05';
 % which room
 roomNum = '1';
 % base path
@@ -192,6 +192,11 @@ end
 %% save
 outfile = [main_file_name '_asr.set'];
 EEG = pop_saveset(EEG, outfile, main_path); 
+
+if isBaseline
+    bsl_outfile = [main_file_name '_baseline_reref_chRm.set'];
+    bsl_EEG = pop_saveset(bsl_EEG, bsl_outfile, bsl_path); 
+end
 fprintf('-------------Saved-------------\n')
 
 %% run AMICA on ASR file --> DO THIS IN THE GUI (Tools>Run AMICA) (use defaults)
@@ -253,8 +258,8 @@ for i=1:EEG.nbchan
 end
 
 %% declare good and bad ICAs --> FILL THIS IN
-EEG.goodcomps = [1 2 4 6 7 8 9 11 12 13 14 15 17 20];
-EEG.badcomps = [3 5 10 16 18 19];
+EEG.goodcomps = [1 2 4 5 7 9 10 11 12 13 14 16 17 18];
+EEG.badcomps = [3 6 8 15 19];
 
 %% save
 outfile = [main_file_name '_ICA.set'];

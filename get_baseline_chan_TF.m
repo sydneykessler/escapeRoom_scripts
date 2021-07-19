@@ -1,4 +1,4 @@
-function [tf] = get_baseline_chan_TF(EEG)
+function [tf] = get_baseline_chan_TF(EEG, freqs)
 % reference: data/projects/ying/Aha/scripts/tf (get_baseline_AhaTf.m)
 
 for chan = 1:EEG.nbchan
@@ -9,7 +9,7 @@ for chan = 1:EEG.nbchan
     srate=EEG.srate;
     cycles=[3 0.5];
     frames=size(EEG.data,2);
-    freqs = [4 50];  
+    % freqs = [2 50];  % [4 50]
     
     data = EEG.data(chan, :, :);
     
