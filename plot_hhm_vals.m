@@ -7,9 +7,11 @@ addpath(genpath([basepath '/scripts']))
 chdir([basepath '/hhm_analysis'])
 
 % only using subs w/o split datasets
-subs2run = {'03','05','07','09','10','11'};
-% manually copying this from heatmap_uses.mat in /dependencies
-heatmap_uses = [2,1,1,1,2,1];
+subs2run = {'03','05','07','09','10','11','12','13','15','16'};
+% 
+% heatmap_uses = load('heatmap_uses.mat'); % as of now, MUST update this manually
+% heatmap_uses = heatmap_uses.heatmap_uses;
+
 segment_names = {'Before','During','After'};
 
 hhm = load('hhm_values.mat');
@@ -21,10 +23,12 @@ set(gcf, 'position',[0,0, 2000,800])
 suptitle('% of new places looked at with respect to heatmap usage')
 
 for i=1:length(subs2run)
-    subplot(2, 3, i)
+    subplot(3, 4, i)
+    
+    heatmap_uses = hhm.sub(i).hhm_uses;
     
     % plot
-    if heatmap_uses(i) == 1
+    if heatmap_uses == 1
         b = bar(hhm.sub(i).use(1).percentage_under_ten, 'FaceColor','b', ...
             'BarWidth', 0.5);
         legend('First Use')

@@ -5,11 +5,11 @@
 
 %% define parameters
 
-subs2use = {'06','08','09','10','11'};
+subs2run = {'12','13','14','15','16','17','18'};
 
-for p=1:length(subs2use)
-    
-    subNum = subs2use{p}; %'05';
+for p=2:length(subs2run)
+    i = 1; % this is roomNum
+    subNum = subs2run{p}; %'05';
 
     numprocs = 1;       % # of nodes (1-4: default 1)
     num_models = 5;     % # of models of mixture ICA
@@ -45,9 +45,15 @@ for p=1:length(subs2use)
     roomNum = num2str(i);
     fprintf('-------------ROOM %d-------------\n', i)
     filename = ['room' roomNum '_sub' subNum '_asr_nobsl.set'];
-
+    
     EEG = pop_loadset(filename);
     fprintf('-------------Loaded file-------------\n')
+    
+    % create subject folder
+    chdir(['/data/projects/ying/VR/escapeRoom/multi_model_AMICA/amica_output/' mod_path])
+    if ~isfolder(['sub' subNum])
+        mkdir(['sub' subNum])
+    end
 
     outdir = [outpath '/amicaout_room' roomNum '_' num2str(num_models) 'mods/'];
     %% run

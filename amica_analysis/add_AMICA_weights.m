@@ -3,12 +3,12 @@
 %%
 %eeglab
 
-subs2use = {'06','08','09','10','11'};
+subs2run = {'12','13','14','15','16','17','18'};
 
-for p=1:length(subs2use)
+for p=1:length(subs2run)
 
     %% define parameters
-    subNum = subs2use{p}; %'03';
+    subNum = subs2run{p}; %'03';
     num_models = 5;
     mod_path = 'five_mods';
 

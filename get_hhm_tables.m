@@ -5,18 +5,22 @@ basepath = '/data/projects/ying/VR/escapeRoom';
 addpath(genpath([basepath '/scripts']))
 
 % only using subs w/o split datasets
-subs2run = {'03','05','07','09','10','11'};
-% manually copying this from heatmap_uses.mat in /dependencies
-heatmap_uses = [2,1,1,1,2,1];
+subs2run = {'03','05','07','09','10','11','12','13','15','16'};
+
+heatmap_uses = load('heatmap_uses.mat'); % as of now, MUST update this manually
+heatmap_uses = heatmap_uses.heatmap_uses;
 
 time_frame = 120; % to match ersp analysis
 
 %% for each subject...
-for i=3:length(subs2run)
+for i=1:length(subs2run)
     
     % declare subNum/how many times they used the heatmap
     subNum = subs2run{i};
-    hhm_uses = heatmap_uses(i);
+    
+    isSub = cellfun(@(x)isequal(x,['sub' subNum]), heatmap_uses);
+    [sub_idx] = find(isSub);
+    hhm_uses = heatmap_uses{sub_idx,2};
     
     hhm.sub(i).subNum = subNum;
     hhm.sub(i).hhm_uses = hhm_uses;

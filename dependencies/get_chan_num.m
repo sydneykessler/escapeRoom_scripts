@@ -8,4 +8,11 @@ for chan = 1:length(EEG.chanlocs)
     allLabels{chan} = EEG.chanlocs(chan).labels;
 end
 
-chanNum = find(ismember(allLabels, chan_name));
+possible_chanNum = find(ismember(allLabels, chan_name));
+
+if isempty(possible_chanNum)
+    fprintf('Channel not found\n')
+    return
+else 
+    chanNum = possible_chanNum;
+end
